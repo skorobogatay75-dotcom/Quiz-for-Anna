@@ -1,5 +1,3 @@
-import './style.css'
-
 const TOTAL_STEPS = 4
 
 const QUESTIONS = [
