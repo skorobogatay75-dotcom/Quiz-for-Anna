@@ -101,7 +101,7 @@ function render() {
 
   app.innerHTML = `
     <div class="quiz">
-      ${renderBrand(true)}
+      ${renderBrand(true, currentStep === 0)}
       <section class="panel" aria-labelledby="step-title">
         <div class="progress" aria-hidden="false">
           <div class="progress__meta">
@@ -146,9 +146,14 @@ function render() {
   }
 }
 
-function renderBrand(showTagline) {
+function renderBrand(showTagline, showPhoto = false) {
   return `
     <header class="brand">
+      ${
+        showPhoto
+          ? '<img class="brand__photo" src="./src/assets/anna.png" alt="Анна Вечеринина" width="84" height="84" />'
+          : ''
+      }
       <p class="brand__label">Риелтор</p>
       <h1 class="brand__name">Анна Вечеринина</h1>
       ${

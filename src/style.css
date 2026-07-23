@@ -74,6 +74,18 @@ button {
   animation: fadeUp 0.6s var(--transition) both;
 }
 
+.brand__photo {
+  width: 84px;
+  height: 84px;
+  margin: 0 auto 14px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center 18%;
+  border: 2px solid var(--accent);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+  display: block;
+}
+
 .brand__label {
   margin: 0 0 6px;
   font-size: 0.75rem;
