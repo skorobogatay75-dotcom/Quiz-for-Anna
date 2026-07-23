@@ -75,12 +75,12 @@ button {
 }
 
 .brand__photo {
-  width: 84px;
-  height: 84px;
+  width: 96px;
+  height: 96px;
   margin: 0 auto 14px;
   border-radius: 50%;
   object-fit: cover;
-  object-position: center 18%;
+  object-position: center 22%;
   border: 2px solid var(--accent);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
   display: block;

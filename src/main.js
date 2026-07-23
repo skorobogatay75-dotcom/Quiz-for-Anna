@@ -151,7 +151,7 @@ function renderBrand(showTagline, showPhoto = false) {
     <header class="brand">
       ${
         showPhoto
-          ? '<img class="brand__photo" src="./src/assets/anna.png" alt="Анна Вечеринина" width="84" height="84" />'
+          ? '<img class="brand__photo" src="./src/assets/anna.png" alt="Анна Вечеринина" width="96" height="96" />'
           : ''
       }
       <p class="brand__label">Риелтор</p>
