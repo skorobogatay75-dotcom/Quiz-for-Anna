@@ -287,7 +287,7 @@ function bindEvents() {
       }
     })
 
-    form?.addEventListener('submit', (event) => {
+    form?.addEventListener('submit', async (event) => {
       event.preventDefault()
       const digits = answers.phone
       if (!isPhoneComplete(digits)) {
@@ -299,18 +299,55 @@ function bindEvents() {
       }
 
       const payload = {
-        rooms: answers.rooms,
-        purpose: answers.purpose,
-        payment: answers.payment,
-        phone: `+7${digits}`,
-        createdAt: new Date().toISOString(),
+        _subject: 'Новая заявка с квиза — Анна Вечеринина',
+        _template: 'table',
+        Комнаты: answers.rooms,
+        'Цель покупки': answers.purpose,
+        'Способ оплаты': answers.payment,
+        Телефон: `+7${digits}`,
       }
 
-      // Готово к подключению CRM / Telegram / Google Sheets
-      console.info('Quiz lead:', payload)
-      localStorage.setItem('anna-quiz-lead', JSON.stringify(payload))
+      submitBtn.disabled = true
+      submitBtn.textContent = 'Отправляем...'
+      error.textContent = ''
 
-      goToStep(4)
+      try {
+        const response = await fetch(
+          'https://formsubmit.co/ajax/Annackr@mail.ru',
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Accept: 'application/json',
+            },
+            body: JSON.stringify(payload),
+          },
+        )
+
+        const result = await response.json().catch(() => ({}))
+        if (!response.ok || result.success === 'false' || result.success === false) {
+          throw new Error(result.message || 'Не удалось отправить заявку')
+        }
+
+        localStorage.setItem(
+          'anna-quiz-lead',
+          JSON.stringify({
+            rooms: answers.rooms,
+            purpose: answers.purpose,
+            payment: answers.payment,
+            phone: `+7${digits}`,
+            createdAt: new Date().toISOString(),
+          }),
+        )
+
+        goToStep(4)
+      } catch (err) {
+        console.error(err)
+        error.textContent =
+          'Не удалось отправить заявку. Попробуйте ещё раз через минуту.'
+        submitBtn.disabled = false
+        submitBtn.textContent = 'Получить подборку'
+      }
     })
   }
 }
