@@ -298,13 +298,23 @@ function bindEvents() {
         return
       }
 
+      const phone = `+7${digits}`
       const payload = {
         _subject: 'Новая заявка с квиза — Анна Вечеринина',
+        _captcha: false,
         _template: 'table',
-        Комнаты: answers.rooms,
-        'Цель покупки': answers.purpose,
-        'Способ оплаты': answers.payment,
-        Телефон: `+7${digits}`,
+        _next: 'https://skorobogatay75-dotcom.github.io/Quiz-for-Anna/',
+        name: 'Заявка с квиза',
+        phone,
+        rooms: answers.rooms,
+        purpose: answers.purpose,
+        payment: answers.payment,
+        message: [
+          `Телефон: ${phone}`,
+          `Комнаты: ${answers.rooms}`,
+          `Цель покупки: ${answers.purpose}`,
+          `Способ оплаты: ${answers.payment}`,
+        ].join('\n'),
       }
 
       submitBtn.disabled = true
@@ -325,8 +335,22 @@ function bindEvents() {
         )
 
         const result = await response.json().catch(() => ({}))
-        if (!response.ok || result.success === 'false' || result.success === false) {
-          throw new Error(result.message || 'Не удалось отправить заявку')
+        const failed =
+          !response.ok || result.success === 'false' || result.success === false
+        const needsActivation = /activation/i.test(String(result.message || ''))
+
+        if (failed) {
+          if (needsActivation) {
+            error.textContent =
+              'Нужно подтвердить почту: откройте письмо от FormSubmit на Annackr@mail.ru и нажмите Activate Form. Страница 404 после этого — нормально. Затем отправьте заявку ещё раз.'
+          } else {
+            error.textContent =
+              result.message ||
+              'Не удалось отправить заявку. Попробуйте ещё раз через минуту.'
+          }
+          submitBtn.disabled = false
+          submitBtn.textContent = 'Получить подборку'
+          return
         }
 
         localStorage.setItem(
@@ -335,7 +359,7 @@ function bindEvents() {
             rooms: answers.rooms,
             purpose: answers.purpose,
             payment: answers.payment,
-            phone: `+7${digits}`,
+            phone,
             createdAt: new Date().toISOString(),
           }),
         )
@@ -344,7 +368,7 @@ function bindEvents() {
       } catch (err) {
         console.error(err)
         error.textContent =
-          'Не удалось отправить заявку. Попробуйте ещё раз через минуту.'
+          'Не удалось отправить заявку. Проверьте интернет и попробуйте ещё раз.'
         submitBtn.disabled = false
         submitBtn.textContent = 'Получить подборку'
       }
